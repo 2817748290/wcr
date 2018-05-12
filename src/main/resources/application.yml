@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://10.10.3.113:3306/wcr?characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    ip: localhost
+    port: 3306
+    database: wcr
+
+  thymeleaf:
+    cache: false
+    check-template: false
+    mode: LEGACYHTML5
+  http:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sxito.wcr.bean
+
+com:
+  sxito:
+    custom:
+      windows-path: d:/sxito
+      linux-path: /sxito
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
+jwt:
+  secret: zpliuSecret
+  header: token
+  validity-time: 7200000
+server:
+  port: 80

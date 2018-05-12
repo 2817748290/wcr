@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.CourseClassMapper">
+    <resultMap id="CourseClassMap" type="CourseClass">
+        <id column="id" property="classId"/>
+        <result column="course_id" property="couseId"/>
+        <result column="class_name" property="className"/>
+        <result column="allowed_add" property="allowedAdd"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <select id="getDefaultClassByClassId" parameterType="int" resultMap="CourseClassMap">
+        SELECT * FROM course_class
+        WHERE id=#{defaultClassId}
+    </select>
+
+    <select id="getCourseClassByCourseId" resultMap="CourseClassMap">
+        SELECT * FROM course_class
+        WHERE course_id=#{courseId}
+    </select>
+
+    <!--arrange-->
+    <select id="getCourseClassByClassId" resultMap="CourseClassMap">
+        SELECT * FROM course_class
+        WHERE id=#{classId}
+    </select>
+
+    <update id="editClassName" parameterType="CourseClass">
+        UPDATE course_class SET class_name=#{className} WHERE id=#{classId}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="CourseClass">
+        update course_class
+        <set>
+            <if test="className != null">
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="couseId != null">
+                course_id = #{couseId,jdbcType=TINYINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="allowedAdd != null">
+                allowed_add = #{allowedAdd,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{classId,jdbcType=INTEGER}
+    </update>
+    <insert id="addCourseClass" parameterType="CourseClass">
+        INSERT INTO course_class (course_id,class_name,type)
+        VALUES (#{couseId},#{className},#{type})
+    </insert>
+
+    <select id="getStudentCourseByStudentId" resultMap="CourseClassMap">
+        SELECT s.*, c.*, u.* FROM student_class s, course_class c, user_info u
+        WHERE c.id = s.class_id
+        AND s.student_id = u.id
+        AND u.id = #{studentId}
+    </select>
+</mapper>

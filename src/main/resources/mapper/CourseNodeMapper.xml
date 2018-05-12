@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.CourseNodeMapper">
+    <resultMap id="CourseNodeMap" type="CourseNode">
+        <id column="id" property="id"></id>
+        <result column="title" property="title"></result>
+        <result column="level" property="level"></result>
+        <result column="level_order" property="levelOrder"></result>
+        <result column="parent_id" property="parentId"></result>
+        <result column="course_id" property="courseId"></result>
+        <result column="gmt_create" property="gmtCreate"></result>
+        <result column="gmt_modified" property="gmtModified"></result>
+    </resultMap>
+
+
+    <select id="getCourseNodeByNodeId" resultMap="CourseNodeMap" >
+        SELECT * FROM course_node
+        WHERE id=#{nodeId}
+    </select>
+
+    <insert id="addCourseNodeInfo" useGeneratedKeys="true" keyProperty="id" parameterType="CourseNode">
+        INSERT INTO course_node (title,level,level_order,parent_id,course_id)
+        VALUES (#{title},#{level},#{levelOrder},#{parentId},#{courseId})
+    </insert>
+
+    <select id="getCourseNodeByCourseId" parameterType="int" resultMap="CourseNodeMap">
+        SELECT * FROM course_node
+        WHERE course_id=#{courseId}
+        ORDER BY level , level_order asc
+    </select>
+
+    <update id="updateCourseNodeInfo" parameterType="CourseNode">
+        update course_node
+        set level_order = #{levelOrder}
+        where id = #{id}
+    </update>
+
+    <update id="updateCourseNodeInfoTitle" parameterType="CourseNode">
+        update course_node
+        set title = #{title}
+        where id = #{id}
+    </update>
+
+    <delete id="delCourseNodeInfo">
+        DELETE from course_node
+        WHERE id in
+        <foreach collection="array" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

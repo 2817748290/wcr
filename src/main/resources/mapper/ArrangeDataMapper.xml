@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.ArrangeDataMapper">
+    <resultMap id="arrangeDataMapper" type="ArrangeData">
+        <id column="id" property="id"></id>
+        <result column="node_normal" property="nodeNormal"></result>
+        <result column="node_tree" property="nodeTree"></result>
+        <result column="gmt_create" property="gmtCreate"></result>
+        <result column="gmt_modified" property="gmtModified"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="ArrangeData" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO arrange_data (issue,vote,node_normal,node_tree)
+        VALUES (#{issue},#{vote},#{nodeNormal},#{nodeTree})
+    </insert>
+
+    <select id="getArrangeData" parameterType="int" resultMap="arrangeDataMapper">
+        SELECT * FROM arrange_data
+        WHERE id = #{id}
+    </select>
+
+</mapper>

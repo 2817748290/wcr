@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.CourseArrangeMapper">
+    <resultMap id="CourseArrangeResult" type="CourseArrange">
+        <id column="id" property="id"/>
+        <result column="topic" property="topic"/>
+        <result column="class_id" property="classId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="course_ontime" property="courseOntime"/>
+        <result column="course_downtime" property="courseDowntime"/>
+        <result column="state" property="state"/>
+        <result column="data_id" property="arrangeDataId"/>
+        <result column="groups" property="groups"/>
+    </resultMap>
+
+    <select id="getCourseArrangeByCourseId" parameterType="int" resultMap="CourseArrangeResult">
+        SELECT a.* FROM course_arrange a
+        WHERE a.course_id = #{courseId}
+    </select>
+
+    <update id="updateCourseArrangeById" parameterType="com.sxito.wcr.bean.CourseArrange">
+        UPDATE course_arrange a
+        SET a.class_id = #{classId},
+        a.topic = #{topic},
+        a.course_ontime = #{courseOntime},
+        a.course_downtime = #{courseDowntime},
+        a.state = #{state}
+        WHERE a.id = #{id}
+    </update>
+
+    <delete id="deleteCourseArrangeById" parameterType="int">
+        DELETE FROM course_arrange
+        WHERE id=#{id}
+    </delete>
+
+    <select id="getCourseArrangeById" parameterType="int" resultMap="CourseArrangeResult">
+        SELECT a.* FROM course_arrange a
+        WHERE a.id=#{id}
+    </select>
+
+    <update id="updateStateCourseArrange" parameterType="int">
+        UPDATE course_arrange a
+        SET a.state = 1
+        WHERE a.id = #{id}
+    </update>
+
+    <select id="findPage" resultMap="CourseArrangeResult">
+        SELECT a.* FROM course_arrange a, course_class c, course_info i
+        WHERE c.id =  a.class_id
+        AND a.course_id = i.id
+        AND a.course_id = #{courseId}
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="searchCourseArrange" resultMap="CourseArrangeResult">
+        SELECT a.*, c.class_name, s.state_info FROM course_arrange a, course_class c, course_info i, state s
+        WHERE c.id =  a.class_id AND a.course_id = i.id AND a.course_id = #{courseId}
+        AND s.id = a.state
+        AND ${searchName} LIKE #{search}
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM course_arrange a, course_class c, course_info i
+        WHERE c.id =  a.class_id
+        AND a.course_id = i.id
+        AND a.course_id = #{courseId}
+    </select>
+
+    <select id="searchCount" resultType="int">
+        SELECT COUNT(*) FROM course_arrange a, course_class c, course_info i, state s
+        WHERE c.id =  a.class_id AND a.course_id = i.id AND a.course_id = #{courseId}
+        AND s.id = a.state
+        AND ${searchName} LIKE #{search}
+    </select>
+
+    <insert id="addCourseArrange" parameterType="CourseArrange">
+        INSERT INTO course_arrange (class_id, course_id, topic, course_ontime, course_downtime, state,groups,data_id)
+        VALUES (#{classId},#{courseId},#{topic},#{courseOntime},#{courseDowntime},#{state},#{groups},#{arrangeDataId})
+    </insert>
+
+</mapper>

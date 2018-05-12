@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="uploadForm" role="form"  enctype="multipart/form-data">
+    <input id="infile" type="file" name="file"/>
+</form>
+
+<button  type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+<button id="aa" type="button" class="btn btn-primary" data-dismiss="modal" >确定</button>
+<img id="showImg" src=""/>
+<button id="aa1" type="button" class="btn btn-primary" data-dismiss="modal" >备份</button>
+<a id="h" href="">下载链接：<h5 id="t"></h5></a>
+</body>
+<script src="/static/js/jquery-2.2.3.min.js"></script>
+
+<script >
+    $(document).ready(function(){
+        $("#aa1").click(function(){
+            $.ajax({
+                url : "/sqlbackup",
+                type : 'POST',
+                beforeSend:function(){
+                    console.log("正在进行，请稍候");
+                },
+                success : function(responseStr) {
+                    if(responseStr.status===1){
+                        console.log("成功"+responseStr);
+                        $("#h").attr('href',responseStr.result);
+                        $("#t").val(responseStr.result);
+                    }else{
+                        console.log("失败");
+                    }
+                },
+                error : function(responseStr) {
+                    console.log("error");
+                }
+            });
+        });
+        $("#aa").click(function(){
+            var formData = new FormData();
+            //var name = $("input").val();
+            //formData.append("file",$("#uploadForm")[0]);
+            formData.append("file",$("input[name=file]")[0].files[0]);
+            console.log(formData);
+            //formData.append("name",name);
+            $.ajax({
+                url : "/upload",
+                type : 'POST',
+                data : formData,
+                // 告诉jQuery不要去处理发送的数据
+                processData : false,
+                // 告诉jQuery不要去设置Content-Type请求头
+                contentType : false,
+                beforeSend:function(){
+                    console.log("正在进行，请稍候");
+                },
+                success : function(responseStr) {
+                    if(responseStr.status===1){
+                        console.log("成功"+responseStr);
+                        $("#showImg").attr('src',responseStr.result);
+                    }else{
+                        console.log("失败");
+                    }
+                },
+                error : function(responseStr) {
+                    console.log("error");
+                }
+            });
+        });
+    });
+
+
+</script>
+</html>

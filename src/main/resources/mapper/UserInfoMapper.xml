@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.UserInfoMapper">
+    <resultMap id="UserInfoMap" type="UserInfo">
+        <id column="id" property="id"></id>
+        <result column="nickname" property="nickname"></result>
+        <result column="phone_number" property="phoneNumber"></result>
+        <result column="is_locked" property="locked"></result>
+        <result column="head_img_url" property="headImgUrl"></result>
+        <result column="default_class_id" property="defaultClassId"></result>
+        <result column="group_id" property="groupId"></result>
+        <result column="gmt_create" property="gmtCreate"></result>
+        <result column="gmt_modified" property="gmtModified"></result>
+    </resultMap>
+
+    <select id="getAllStudentPage"  resultMap="UserInfoMap">
+        SELECT * FROM user_info
+        WHERE group_id = 2
+        <if test="search != null">
+            AND ${searchName} LIKE #{search}
+        </if>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+    <select id="getAllStudentPageCount" resultType="int">
+        SELECT COUNT(*) FROM user_info
+        WHERE group_id = 2
+        <if test="search != null">
+            AND ${searchName} LIKE #{search}
+        </if>
+    </select>
+
+    <select id="getByUsername"  resultMap="UserInfoMap">
+        SELECT * FROM user_info
+        WHERE username = #{username}
+    </select>
+
+    <select id="findPage" resultMap="UserInfoMap">
+        SELECT u.* FROM user_info u,student_class s
+        WHERE u.id = s.student_id AND s.class_id = #{classId}
+        <if test="search != null">
+            AND ${searchName} LIKE #{search}
+        </if>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM user_info u,student_class s
+        WHERE u.id = s.student_id AND s.class_id = #{classId}
+        <if test="search != null">
+            AND ${searchName} LIKE #{search}
+        </if>
+    </select>
+
+
+    <select id="getClassStudent" parameterType="int" resultMap="UserInfoMap">
+        SELECT u.* FROM user_info u,student_class s
+        WHERE u.id = s.student_id AND s.class_id = #{classId}
+    </select>
+
+
+    <insert id="addStudentIntoClass" parameterType="StudentClass">
+        INSERT INTO student_class (student_id,class_id)
+        VALUES (#{id},#{classId})
+    </insert>
+
+    <select id="getUserInfoById" parameterType="int" resultMap="UserInfoMap">
+        SELECT u.* FROM user_info u
+        WHERE u.id = #{id}
+    </select>
+
+    <select id="getTeacher" resultMap="UserInfoMap">
+        SELECT * FROM user_info
+        WHERE group_id = 1
+    </select>
+
+    <update id="updateUserInfoById" parameterType="com.sxito.wcr.bean.UserInfo">
+        update user_info
+        <set>
+            <!--<if test="password != null">-->
+                <!--password = #{password},-->
+            <!--</if>-->
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="salt != null">
+                salt = #{salt},
+            </if>
+            <if test="phoneNumber != null">
+                phone_number = #{phoneNumber},
+            </if>
+            <if test="phoneNumber != null">
+                locked = #{locked},
+            </if>
+            <if test="headImgUrl != null">
+                head_img_url = #{headImgUrl},
+            </if>
+            <if test="groupId != null">
+                group_id = #{groupId},
+            </if>
+            <if test="defaultClassId != null">
+                default_class_id = #{defaultClassId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

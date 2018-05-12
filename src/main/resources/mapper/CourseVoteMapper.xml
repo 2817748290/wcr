@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.CourseVoteMapper">
+    <resultMap id="CourseVoteMap" type="CourseVote">
+        <id column="id" property="id"></id>
+        <result column="node_id" property="nodeId"></result>
+        <result column="gmt_create" property="gmtCreate"></result>
+        <result column="gmt_modified" property="gmtModified"></result>
+    </resultMap>
+    <select id="getById" resultMap="CourseVoteMap">
+        SELECT * FROM course_vote
+        WHERE id=#{id}
+    </select>
+
+    <insert id="addCourseVote" parameterType="CourseVote" >
+        INSERT INTO course_vote (node_id,title,content)
+        VALUES (#{nodeId},#{title},#{content})
+    </insert>
+
+    <select id="getCourseVote" resultMap="CourseVoteMap" >
+        SELECT * FROM course_vote
+        WHERE node_id=#{nodeId}
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM course_vote
+        WHERE node_id=#{nodeId}
+    </select>
+
+    <select id="getCourseVodeByNodeId" resultMap="CourseVoteMap">
+        select * from course_vote
+        where node_id in
+        <foreach collection="array" item="nodeId" index="index" open="(" separator="," close=")">
+            #{nodeId}
+        </foreach>
+    </select>
+
+    <delete id="deleteCourseVote" parameterType="int">
+        DELETE from course_vote WHERE id=#{id}
+    </delete>
+
+    <update id="updateCourseVote" parameterType="CourseVote">
+        update course_vote
+        set node_id=#{nodeId},title=#{title},content=#{content}
+        where id = #{id}
+    </update>
+
+</mapper>

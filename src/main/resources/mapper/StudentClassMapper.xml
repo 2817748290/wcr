@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.StudentClassMapper">
+    <resultMap id="StudentClassMap" type="StudentClass">
+        <result column="class_id" property="classId"></result>
+        <result column="student_id" property="studentId"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="StudentClass">
+        INSERT INTO student_class (student_id,class_id)
+        VALUES (#{studentId},#{classId})
+    </insert>
+    <select id="selectByClassIdAndStudentId" parameterType="StudentClass" resultType="int">
+        SELECT COUNT(*) FROM student_class WHERE student_id = #{studentId} AND class_id = #{classId}
+    </select>
+    <delete id="deleteClassStudent" parameterType="StudentClass">
+        DELETE from student_class WHERE class_id=#{classId} AND student_id=#{studentId}
+    </delete>
+</mapper>

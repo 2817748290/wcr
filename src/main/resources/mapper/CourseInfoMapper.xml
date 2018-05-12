@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.CourseInfoMapper">
+
+    <resultMap type="CourseInfo" id="CourseInfoResult">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="cover_img_url" property="coverImgUrl"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="coverImgUrl" property="coverImgUrl"/>
+        <result column="is_backed" property="isBacked"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <select id="getInitCourseInfo" resultType="CourseInfo" resultMap="CourseInfoResult">
+        SELECT c.* FROM course_info c
+        WHERE c.id = #{courseId}
+        AND c.teacher_id = #{teacherId}
+    </select>
+
+    <update id="updateCourseInfo" parameterType="com.sxito.wcr.bean.CourseInfo">
+        UPDATE
+        course_info c
+        SET
+        <!--<if test="name != null">-->
+        c.cover_img_url = #{coverImgUrl},
+        c.description = #{description},
+        c.name = #{name}
+        WHERE
+        c.id = #{courseId}
+        AND
+        c.teacher_id = #{teacherId}
+    </update>
+
+    <select id="getCourseByTeacherId" parameterType="int" resultMap="CourseInfoResult">
+        SELECT * FROM course_info
+        WHERE teacher_id=#{teacherId}
+    </select>
+
+    <select id="getCourseByCourseId" resultMap="CourseInfoResult">
+        SELECT * FROM course_info
+        WHERE id=#{courseId}
+    </select>
+
+    <!--<select id="getCourseNodeByCourseId" resultMap="CourseNode">-->
+        <!--SELECT * FROM course_info-->
+        <!--WHERE id=#{courseId}-->
+    <!--</select>-->
+
+    <insert id="createCourseInfo" parameterType="CourseInfo">
+        INSERT INTO course_info (name,description,cover_img_url,teacher_id)
+        VALUES (#{name},#{description},"../../../static/defaultCourse.jpg",#{teacherId})
+    </insert>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxito.wcr.mapper.ClassGroupMapper">
+    <resultMap id="ClassGroupMap" type="ClassGroup">
+        <id column="id" property="id"></id>
+        <result column="group_name" property="groupName"></result>
+        <result column="class_id" property="classId"></result>
+        <result column="gmt_create" property="gmtCreate"></result>
+        <result column="gmt_modified" property="gmtModified"></result>
+    </resultMap>
+
+    <insert id="addClassGroup" parameterType="ClassGroup">
+        INSERT INTO class_group (group_name,groups,class_id)
+        VALUES (#{groupName},#{groups},#{classId})
+    </insert>
+
+    <select id="getClassGroupByGroupId" parameterType="int" resultMap="ClassGroupMap">
+        SELECT * FROM class_group
+        WHERE id = #{groupId}
+    </select>
+
+    <select id="getClassGroupByClassId" parameterType="int" resultMap="ClassGroupMap">
+        SELECT * FROM class_group
+        WHERE class_id = #{classId}
+    </select>
+
+</mapper>
